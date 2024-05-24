@@ -13,7 +13,6 @@
 
 #include "../parser/location.hh"
 #include "../utils/symbols.hh"
-#include "../utils/errors.hh"
 
 namespace ast {
 
@@ -707,49 +706,6 @@ public:
 };
 
 } // namespace types
-
-class Evaluator : public ConstASTIntVisitor {
-  int32_t visit(const class IntegerLiteral & literal) {
-    return literal.value;
-  }
-  int32_t visit(const class BinaryOperator & op) {
-    switch (op.op) {
-      case o_plus: 
-        return op.get_left().accept(*this) + op.get_right().accept(*this);
-      case o_minus:
-        return op.get_left().accept(*this) - op.get_right().accept(*this);
-      case o_times:
-        return op.get_left().accept(*this) * op.get_right().accept(*this);
-      case o_divide:
-        return op.get_left().accept(*this) / op.get_right().accept(*this);
-      default:
-        return 0; // Not implemented yet
-    }
-  }
-  int32_t visit(const class Sequence & seq) {
-    if (seq.get_exprs().empty())
-    {
-      return -1;
-    }
-      // utils::error("Sequence empty");
-    const std::vector<Expr *> exprs = seq.get_exprs();
-    int32_t result = 0;
-    for (Expr* expr : exprs)
-    {
-      result = expr->accept(*this);
-    }
-    return result;
-  }
-  int32_t visit(const class IfThenElse & ite) {
-    int32_t result = -1;
-    if (ite.get_condition().accept(*this)) {
-      result = ite.get_then_part().accept(*this);
-    } else {
-      result = ite.get_else_part().accept(*this);
-    }
-    return result;
-  }
-};
 
 } // namespace ast
 
