@@ -85,6 +85,8 @@ end      return yy::tiger_parser::make_END(loc);
 break    return yy::tiger_parser::make_BREAK(loc);
 function return yy::tiger_parser::make_FUNCTION(loc);
 var      return yy::tiger_parser::make_VAR(loc);
+if       return yy::tiger_parser::make_IF(loc);
+then       return yy::tiger_parser::make_THEN(loc);
 
  /* Identifiers */
 {id}       return yy::tiger_parser::make_ID(Symbol(yytext), loc);
@@ -122,7 +124,7 @@ var      return yy::tiger_parser::make_VAR(loc);
 
  /* Integers */
 {int} {
-  if (strtol(yytext, NULL, 10) < TIGER_INT_MAX && strtol(yytext, NULL, 10) >= -TIGER_INT_MAX)
+  if (strtol(yytext, NULL, 10) < TIGER_INT_MAX)
     return yy::tiger_parser::make_INT(strtol(yytext, NULL, 10), loc);
   utils::error (loc, "integer out of range");
 }
